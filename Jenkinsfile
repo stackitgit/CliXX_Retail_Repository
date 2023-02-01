@@ -32,7 +32,7 @@ pipeline {
         }
 
 
-  stage ('Build Jar and Docker and Push') {
+  stage ('Build Docker Image and Push To ECR') {
           steps {
               sh "/usr/bin/docker build . -t clixx-image:$VERSION "
           }
