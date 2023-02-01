@@ -31,7 +31,6 @@ pipeline {
             }
         }
 
-}
 
   stage ('Build Jar and Docker and Push') {
           steps {
@@ -40,6 +39,8 @@ pipeline {
               '''
           }
         }
+}
+
 }
 
 
