@@ -18,8 +18,12 @@ pipeline {
           // requires SonarQube Scanner 2.8+
           scannerHome = tool 'sonarqube'
         }
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')])
         withSonarQubeEnv('SonarQubeScanner') {
-          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=CliXX-App sonar-scanner   -Dsonar.projectKey=CliXX-App    -Dsonar.login=2bb15080dca74fc51d46fa339be26866e9c681ae"
+          sh ''' ${scannerHome}/bin/sonar-scanner \
+          -Dsonar.projectKey=CliXX-App sonar-scanner  \
+          -Dsonar.projectKey=CliXX-App  \
+          -Dsonar.login=$SONAR_TOKEN '''
         }
         }
 
