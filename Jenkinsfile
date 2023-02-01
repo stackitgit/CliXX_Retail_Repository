@@ -25,12 +25,23 @@ pipeline {
 
  stage('Quality Gate') {
             steps {
+                timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
+            }
             }
         }
 
 }
-}
+
+  stage ('Build Jar and Docker and Push') {
+          steps {
+              sh '''
+                 docker build -t clixx-image:$VERSION .                
+              '''
+          }
+        }
+
+
 
 def getSonarPath(){
         def SonarHome= tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
