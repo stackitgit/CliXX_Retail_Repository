@@ -34,10 +34,10 @@ pipeline {
 
   stage ('Build Jar and Docker and Push') {
           steps {
-            script {
-             DockerHome = tool 'docker-inst'
-             }
-              sh "${DockerHome}/bin/docker build . -t clixx-image:$VERSION "
+            // script {
+            //  DockerHome = tool 'docker-inst'
+            //  }
+              sh "/usr/bin/docker build . -t clixx-image:$VERSION "
           }
         }
 }
