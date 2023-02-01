@@ -13,9 +13,6 @@ pipeline {
         //     sh "${scannerHome}/bin/sonar-scanner"
         //   }
         //     }
-        tools {
-        sonarQube 'SonarQube Scanner 2.8'
-        }
         steps {
         withSonarQubeEnv('SonarQube Scanner') {
           sh 'sonar-scanner'
