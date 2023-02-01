@@ -25,6 +25,7 @@ pipeline {
 }
 
 }
+}
 
 def getSonarPath(){
         def SonarHome= tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
