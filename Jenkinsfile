@@ -3,12 +3,13 @@ pipeline {
 
     environment {
         VERSION = "1.0.${BUILD_NUMBER}"
+        PATH = "${PATH}:${getSonarPath()}"
     }
 
     stages {
         stage ('Sonarcube Scan') {
             steps {
-                sh ''' echo "This is the Sonarcube Scan step!!" '''
+                sh ''' sonar-scanner -v'''
 
 	        }
         }
@@ -16,3 +17,9 @@ pipeline {
 }
 
 }
+
+def getSonarPath(){
+        def SonarHome= tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        return SonarHome
+    }
+
