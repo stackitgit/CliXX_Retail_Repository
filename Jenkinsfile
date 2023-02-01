@@ -14,7 +14,10 @@ pipeline {
         //   }
         //     }
         steps {
-        def scannerHome = tool 'SonarScanner 2.8';
+         script {
+          // requires SonarQube Scanner 2.8+
+          scannerHome = tool 'SonarQube Scanner 2.8'
+        }
         withSonarQubeEnv('SonarQubeScanner') {
           sh "${scannerHome}/bin/sonar-scanner"
         }
