@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage ('Sonarcube Scan') {
             steps {
-                sh ''' echo "This is the Sonarcube Scan step!! '''
+                sh ''' echo "This is the Sonarcube Scan step!!" '''
 
 	        }
         }
@@ -24,7 +24,7 @@ pipeline {
       stage ('Build Jar and Docker and Push') {
           steps {
              sh '''
-                 echo "Ths is Step 2" 
+                 echo "Ths is Step 2"
               '''
             }
           }
@@ -32,13 +32,13 @@ pipeline {
 
       stage('Step 3') {
         steps {
-         sh ''' echo "This is Step 3" '''
+         sh ''' "echo This is Step 3" '''
         }
       }
 
       stage('Step 4') {
         steps {
-            sh ''' echo "This is Step 4" '''
+            sh ''' "echo This is Step 4" '''
         }
       }
     }
