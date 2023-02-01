@@ -35,7 +35,7 @@ pipeline {
   stage ('Build Jar and Docker and Push') {
           steps {
               sh '''
-                 /usr/bin/docker build . -t clixx-image:$VERSION              
+                 sudo docker build . -t clixx-image:$VERSION              
               '''
           }
         }
