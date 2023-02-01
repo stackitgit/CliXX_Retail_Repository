@@ -7,36 +7,33 @@ pipeline {
     }
 
     stages {
-//         stage ('Sonarcube Scan') {
-//         steps {
-//          script {
-//           scannerHome = tool 'sonarqube'
-//         }
-//         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
-//         withSonarQubeEnv('SonarQubeScanner') {
-//           sh " ${scannerHome}/bin/sonar-scanner \
-//           -Dsonar.projectKey=CliXX-App   \
-//           -Dsonar.login=${SONAR_TOKEN} "
-//         }
-//         }
-//         }
+        stage ('Sonarcube Scan') {
+        steps {
+         script {
+          scannerHome = tool 'sonarqube'
+        }
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
+        withSonarQubeEnv('SonarQubeScanner') {
+          sh " ${scannerHome}/bin/sonar-scanner \
+          -Dsonar.projectKey=CliXX-App   \
+          -Dsonar.login=${SONAR_TOKEN} "
+        }
+        }
+        }
 
-// }
+}
 
-//  stage('Quality Gate') {
-//             steps {
-//                 timeout(time: 3, unit: 'MINUTES') {
-//                     waitForQualityGate abortPipeline: true
-//             }
-//             }
-//         }
+ stage('Quality Gate') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+            }
+            }
+        }
 
 
   stage ('Build Jar and Docker and Push') {
           steps {
-            // script {
-            //  DockerHome = tool 'docker-inst'
-            //  }
               sh "/usr/bin/docker build . -t clixx-image:$VERSION "
           }
         }
