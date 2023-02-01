@@ -19,7 +19,7 @@ pipeline {
           scannerHome = tool 'sonarqube'
         }
         withSonarQubeEnv('SonarQubeScanner') {
-          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=CliXX-App"
+          sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=CliXX-App sonar-scanner   -Dsonar.projectKey=CliXX-App    -Dsonar.login=2bb15080dca74fc51d46fa339be26866e9c681ae"
         }
         }
 
