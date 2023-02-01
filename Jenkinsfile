@@ -12,33 +12,7 @@ pipeline {
 
 	        }
         }
-        
-	    // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 3, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
 
-      stage ('Build Jar and Docker and Push') {
-          steps {
-             sh '''
-                 echo "Ths is Step 2"
-              '''
-            }
-          }
-        }
+}
 
-      stage('Step 3') {
-        steps {
-         sh ''' "echo This is Step 3" '''
-        }
-      }
-
-      stage('Step 4') {
-        steps {
-            sh ''' "echo This is Step 4" '''
-        }
-      }
-    }
+}
