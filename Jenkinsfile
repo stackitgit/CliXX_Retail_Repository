@@ -45,6 +45,16 @@ pipeline {
         }
 }
 
+  stage('Deployment Tear Down Prompt ') {
+              steps {
+                script {
+                def userInput = input(id: 'confirm', message: 'Please Test CliXX Image Deployment. Should I delete now?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Tear Down App', name: 'confirm'] ])
+             }
+             sh " docker stop clixx-cont-$VERSION "
+             sh " docker rm  clixx-cont-$VERSION "
+           }
+        }
+
 }
 
 
