@@ -34,7 +34,9 @@ pipeline {
           stage ('Build Docker Image') {
           steps {
             //   sh "/usr/bin/docker build . -t clixx-image:$VERSION "
+            script{
              dockerHome= tool 'docker-inst'
+            }
              sh "${dockerHome}/bin/docker build . -t clixx-image:$VERSION "
           }
         }
