@@ -44,9 +44,16 @@ pipeline {
 
   stage ('Starting Docker Image') {
           steps {
-              sh "docker stop clixx-cont"
-              sh "docker rm clixx-cont"
-              sh "docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION"
+              sh '''
+              if [ docker ps|grep clixx-cont ] then
+                 echo "Docker image exists, killing it"
+                 docker stop clixx-cont
+                 docker rm clixx
+                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION
+              else
+                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION 
+              fi
+              '''
           }
         }
 
