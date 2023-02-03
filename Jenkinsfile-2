@@ -31,13 +31,13 @@ pipeline {
             }
         }
 
-          stage ('Build Docker Image and Push To ECR') {
+          stage ('Build Docker Image') {
           steps {
               sh "/usr/bin/docker build . -t clixx-image:$VERSION "
           }
         }
 
-  stage ('Starting Docker Image for Testing') {
+  stage ('Starting Docker Image') {
           steps {
               sh "/usr/bin/docker run --name clixx-cont-$VERSION  -p 80:80 -d clixx-image:$VERSION"
           }
