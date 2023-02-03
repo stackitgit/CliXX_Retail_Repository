@@ -44,7 +44,7 @@ pipeline {
 
   stage ('Starting Docker Image') {
           steps {
-              sh "${dockerHome}/bin/docker run --name clixx-cont-$VERSION  -p 80:80 -d clixx-image:$VERSION"
+              sh "docker run --name clixx-cont-$VERSION  -p 80:80 -d clixx-image:$VERSION"
           }
         }
 
