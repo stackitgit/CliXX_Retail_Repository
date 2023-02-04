@@ -59,7 +59,7 @@ pipeline {
   stage ('Restore CliXX Database') {
           steps {
               sh '''
-              /usr/bin/ansible /home/ec2-user/restore_db_instance.yml
+              /usr/bin/ansible-playbook /home/ec2-user/restore_db_instance.yml
               '''
           }
         }
