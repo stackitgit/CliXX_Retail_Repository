@@ -62,8 +62,7 @@ pipeline {
             python3 -m venv python3-virtualenv
             source python3-virtualenv/bin/activate
             python --version
-            pip install boto3 botocore
-            /usr/bin/ansible-playbook /tmp/restore_db_instance.yml
+            /usr/bin/ansible-playbook ./deploy_db_ansible/deploy_db.yml
             deactivate
 
               '''
