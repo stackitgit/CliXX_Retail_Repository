@@ -62,7 +62,7 @@ pipeline {
             python3 -m venv python3-virtualenv
             source python3-virtualenv/bin/activate
             python --version
-            /usr/bin/ansible-playbook .deploy_db_ansible/deploy_db.yml
+            /usr/bin/ansible-playbook $WORKSPACE/deploy_db_ansible/deploy_db.yml
             deactivate
 
               '''
