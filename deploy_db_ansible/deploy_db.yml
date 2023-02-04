@@ -7,6 +7,8 @@
       instance_id: wordpressdbclixxjenkins
       db_snapshot: wordpressdbclixxsnap
     tasks:
+       - pip:
+         name: boto3
        - name: Restore DB from snapshot
          local_action:
            module: rds
