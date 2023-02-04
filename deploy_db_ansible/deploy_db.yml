@@ -15,4 +15,6 @@
            instance_name: '{{ instance_id }}'
            region: us-east-1
            wait: yes
+           security_group: sg-096dfd014aed072e6
+           instance_type: db.t2.small
            wait_timeout: 1200
