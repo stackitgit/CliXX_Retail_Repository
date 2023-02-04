@@ -61,9 +61,7 @@ pipeline {
               sh '''
             python3 -m venv python3-virtualenv
             source python3-virtualenv/bin/activate
-            $WORKSPACE/python3 --version
-            $WORKSPACE/python3 -m pip install --upgrade pip
-           
+            python3 --version
             deactivate
 
               '''
