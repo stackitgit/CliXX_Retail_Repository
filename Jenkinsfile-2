@@ -80,7 +80,7 @@ pipeline {
                SERVER_INSTANCE='wordpressdbclixxjenkins.cc5iigzknvxd.us-east-1.rds.amazonaws.com'
                echo "use wordpressdb;" >> /tmp/db.setup
                echo "UPDATE wp_options SET option_value = '$SERVER_IP' WHERE option_value LIKE 'http%'; " >> /tmp/db.setup
-               mysql -u  --password='$PASSWORD' -h '${SERVER_INSTANCE}'  -D  '${DBNAME}' < /tmp/db.setup
+               mysql -u  --password=$PASSWORD -h $SERVER_INSTANCE  -D  $DBNAME < /tmp/db.setup
               '''
           }
         }
