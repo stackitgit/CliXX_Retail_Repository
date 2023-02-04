@@ -8,7 +8,7 @@
       db_snapshot: wordpressdbclixxsnap
     tasks:
        - name: Restore DB from snapshot
-         local_action:
+           local_action:
            module: rds
            command: restore
            snapshot: '{{db_snapshot }}'
