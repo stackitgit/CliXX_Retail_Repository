@@ -59,6 +59,7 @@ pipeline {
   stage ('Restore CliXX Database') {
           steps {
               sh '''
+              pip install boto3
               /usr/bin/ansible-playbook /tmp/restore_db_instance.yml
               '''
           }
