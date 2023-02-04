@@ -72,6 +72,9 @@ pipeline {
 
   stage ('Configure DB Instance') {
           steps {
+            script {
+                def userInput = input(id: 'confirm', message: 'Is DB creation complete?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Complete?', name: 'confirm'] ])
+             }
               sh '''
                USERNAME='wordpressuser'
                PASSWORD='W3lcome123'
