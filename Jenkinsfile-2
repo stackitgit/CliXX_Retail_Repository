@@ -61,8 +61,7 @@ pipeline {
               sh '''
             python3 -m venv python3-virtualenv
             source python3-virtualenv/bin/activate
-            python --version
-            pip3 install boto3 botocore
+            $WORKSPACE/python3 --version
             $WORKSPACE/python3 -m pip install --upgrade pip
            
             deactivate
