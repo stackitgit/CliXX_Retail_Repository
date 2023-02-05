@@ -1,5 +1,5 @@
 ---
-  - name: "Playing with Ansible and Git"
+  - name: "CliXX DB Deployment Ansible Playbook"
     hosts: localhost
     connection: local
     become: ec2-user
