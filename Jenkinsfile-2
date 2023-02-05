@@ -79,7 +79,7 @@ pipeline {
                USERNAME='wordpressuser'
                PASSWORD='W3lcome123'
                DBNAME='wordpressdb'
-               SERVER_IP=`curl http://169.254.169.254/latest/meta-data/local-ipv4`
+               SERVER_IP=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
                SERVER_INSTANCE='wordpressdbclixxjenkins.cd7numzl1xfe.us-east-1.rds.amazonaws.com'
                echo "use wordpressdb;" >> /tmp/db.setup
                echo "UPDATE wp_options SET option_value = '$SERVER_IP' WHERE option_value LIKE 'http%'; " >> /tmp/db.setup
