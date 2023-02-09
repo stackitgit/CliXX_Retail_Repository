@@ -3,7 +3,7 @@
     hosts: localhost
     connection: local
     vars:
-      instance_id: '{{ instance_id }}'
+      instance_id: '{{ inst }}'
     tasks:
 
       - name: remove a db instance without taking a final snapshot
