@@ -120,6 +120,7 @@ pipeline {
                 docker push ${ECR_REPO}:clixx-image-$VERSION
               '''
           }
+          }
         }
     }
 }
