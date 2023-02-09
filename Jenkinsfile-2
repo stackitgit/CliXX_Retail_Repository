@@ -113,7 +113,7 @@ pipeline {
               sh '''
                 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 336528460023.dkr.ecr.us-east-1.amazonaws.com/clixx-repository
               '''
-              sh "docker push clixx-image:1.0.114"
+              sh "docker push clixx-image:1.0.113"
           }
         }
     }
