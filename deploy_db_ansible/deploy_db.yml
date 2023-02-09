@@ -4,8 +4,8 @@
     connection: local
     become: ec2-user
     vars:
-      instance_id: wordpressdbclixxjenkins
-      db_snapshot: wordpressdbclixxsnap
+      instance_id: '{{ instance_id }}'
+      db_snapshot: '{{ db_snapshot }}'
       security_group: sg-096dfd014aed072e6
     tasks:
        - name: Restore DB from snapshot

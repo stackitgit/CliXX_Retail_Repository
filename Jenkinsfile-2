@@ -7,68 +7,68 @@ pipeline {
     }
 
     stages {
-        stage ('Sonarcube Scan') {
-        steps {
-         script {
-          scannerHome = tool 'sonarqube'
-        }
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
-        withSonarQubeEnv('SonarQubeScanner') {
-          sh " ${scannerHome}/bin/sonar-scanner \
-          -Dsonar.projectKey=CliXX-App-Mike   \
-          -Dsonar.login=${SONAR_TOKEN} "
-        }
-        }
-        }
+//         stage ('Sonarcube Scan') {
+//         steps {
+//          script {
+//           scannerHome = tool 'sonarqube'
+//         }
+//         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
+//         withSonarQubeEnv('SonarQubeScanner') {
+//           sh " ${scannerHome}/bin/sonar-scanner \
+//           -Dsonar.projectKey=CliXX-App-Mike   \
+//           -Dsonar.login=${SONAR_TOKEN} "
+//         }
+//         }
+//         }
 
-}
+// }
 
- stage('Quality Gate') {
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-            }
-            }
-        }
+//  stage('Quality Gate') {
+//             steps {
+//                 timeout(time: 3, unit: 'MINUTES') {
+//                     waitForQualityGate abortPipeline: true
+//             }
+//             }
+//         }
 
-          stage ('Build Docker Image') {
-          steps {
-            // script{
-            //  dockerHome= tool 'docker-inst'
-            // }
-            //  sh "${dockerHome}/bin/docker build . -t clixx-image:$VERSION "
-            sh "docker build . -t clixx-image:$VERSION "
-          }
-        }
+//           stage ('Build Docker Image') {
+//           steps {
+//             // script{
+//             //  dockerHome= tool 'docker-inst'
+//             // }
+//             //  sh "${dockerHome}/bin/docker build . -t clixx-image:$VERSION "
+//             sh "docker build . -t clixx-image:$VERSION "
+//           }
+//         }
 
-  stage ('Starting Docker Image') {
-          steps {
-              sh '''
-              if ( docker ps|grep clixx-cont ) then
-                 echo "Docker image exists, killing it"
-                 docker stop clixx-cont
-                 docker rm clixx-cont
-                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION
-              else
-                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION 
-              fi
-              '''
-          }
-        }
+//   stage ('Starting Docker Image') {
+//           steps {
+//               sh '''
+//               if ( docker ps|grep clixx-cont ) then
+//                  echo "Docker image exists, killing it"
+//                  docker stop clixx-cont
+//                  docker rm clixx-cont
+//                  docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION
+//               else
+//                  docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION 
+//               fi
+//               '''
+//           }
+//         }
 
-  stage ('Restore CliXX Database') {
-          steps {
-              sh '''
-            python3 -m venv python3-virtualenv
-            source python3-virtualenv/bin/activate
-            python3 --version
-            pip3 install boto3 botocore boto
-            ansible-playbook $WORKSPACE/deploy_db_ansible/deploy_db.yml
-            deactivate
+//   stage ('Restore CliXX Database') {
+//           steps {
+//               sh '''
+//             python3 -m venv python3-virtualenv
+//             source python3-virtualenv/bin/activate
+//             python3 --version
+//             pip3 install boto3 botocore boto
+//             ansible-playbook $WORKSPACE/deploy_db_ansible/deploy_db.yml
+//             deactivate
 
-              '''
-          }
-        }
+//               '''
+//           }
+//         }
 
   stage ('Configure DB Instance') {
           steps {
