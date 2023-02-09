@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // VERSION = "1.0.${BUILD_NUMBER}"
-        VERSION = "1.0.114"
+        VERSION = "1.0.113"
         PATH = "${PATH}:${getSonarPath()}:${getDockerPath()}"
     }
 
