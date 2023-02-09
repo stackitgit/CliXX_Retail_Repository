@@ -56,6 +56,14 @@ pipeline {
 //           }
 //         }
 
+     stage ('Build Docker Image') {
+      steps{
+         script{
+                 app = docker.build("clixx-image:${VERSION}")
+                }
+      }
+     }
+
 //   stage ('Restore CliXX Database') {
 //           steps {
 //               sh '''
@@ -105,20 +113,31 @@ pipeline {
 //           }
 //         }
 
-        stage ('Log Into ECR and push the newly created Docker') {
-          steps {
-             script {
-                def userInput = input(id: 'confirm', message: 'Push Image To ECR?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Push to ECR?', name: 'confirm'] ])
-             }
-              sh '''
-                 aws ecr get-login-password --region us-east-1| docker login --username AWS --password-stdin aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 336528460023.dkr.ecr.us-east-1.amazonaws.com/clixx-repository
-                 docker push clixx-image:$VERSION
+        // stage ('Log Into ECR and push the newly created Docker') {
+        //   steps {
+        //      script {
+        //         def userInput = input(id: 'confirm', message: 'Push Image To ECR?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Push to ECR?', name: 'confirm'] ])
+        //      }
+        //       sh '''
+                
 
-              '''
+        //       '''
+        //   }
+        // }
+
+        stage ('Push to ECR'){
+          steps{
+             script{
+             docker.withRegistry('https://336528460023.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-2:aws-credentials') {
+             app.push("clixx-image:${VERSION}")
+             app.push("latest")
+             }
+
+
           }
         }
 
-
+    }
     }
 }
 
