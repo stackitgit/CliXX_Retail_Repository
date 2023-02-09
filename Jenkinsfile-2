@@ -98,7 +98,6 @@ pipeline {
             pip3 install boto3 botocore boto
             ansible-playbook $WORKSPACE/deploy_db_ansible/delete_db.yml
             deactivate
-            rm -r venv
             docker stop clixx-cont
             docker rm  clixx-cont
 
