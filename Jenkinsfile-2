@@ -118,6 +118,7 @@ pipeline {
                 docker tag clixx-image:$VERSION ${ECR_REPO}:clixx-image-$VERSION
                 docker tag clixx-image:$VERSION ${ECR_REPO}:latest
                 docker push ${ECR_REPO}:clixx-image-$VERSION
+                docker push ${ECR_REPO}:latest
               '''
           }
           }
