@@ -29,6 +29,32 @@ function do_signup_header() {
 }
 add_action( 'wp_head', 'do_signup_header' );
 
+/**
+ * Map raw error messages to friendlier, plain-language messages.
+ * Keeps original message if no mapping is found.
+ */
+function friendly_error_message( $message ) {
+	if ( ! $message ) {
+		return '';
+	}
+
+	$map = array(
+		'is already registered' => 'That value is already in use. Try a different one.',
+		'already registered' => 'That value is already in use. Try a different one.',
+		'is invalid' => 'That value looks invalid. Check the format and try again.',
+		'contains invalid characters' => 'Use only letters and numbers (no spaces or symbols).',
+		'may not be empty' => 'This field cannot be empty.',
+	);
+
+	foreach ( $map as $needle => $friendly ) {
+		if ( false !== stripos( $message, $needle ) ) {
+			return $friendly;
+		}
+	}
+
+	return $message;
+}
+
 if ( ! is_multisite() ) {
 	wp_redirect( wp_registration_url() );
 	die();
@@ -103,6 +129,8 @@ function show_blog_form( $blogname = '', $blog_title = '', $errors = '' ) {
 	}
 
 	$current_network = get_network();
+	// Progress indicator for multi-step signup: Site is typically step 2.
+	echo '<div class="signup-progress" style="margin-bottom:1em;font-weight:600;">Step 2 of 2 — Site</div>';
 	// Blog name.
 	if ( ! is_subdomain_install() ) {
 		echo '<label for="blogname">' . __( 'Site Name:' ) . '</label>';
@@ -113,15 +141,17 @@ function show_blog_form( $blogname = '', $blog_title = '', $errors = '' ) {
 	$errmsg = $errors->get_error_message( 'blogname' );
 	if ( $errmsg ) {
 		?>
-		<p class="error"><?php echo $errmsg; ?></p>
+		<p class="error"><?php echo esc_html( friendly_error_message( $errmsg ) ); ?></p>
 		<?php
 	}
 
 	if ( ! is_subdomain_install() ) {
-		echo '<span class="prefix_address">' . $current_network->domain . $current_network->path . '</span><input name="blogname" type="text" id="blogname" value="' . esc_attr( $blogname ) . '" maxlength="60" /><br />';
+		echo '<span class="prefix_address">' . $current_network->domain . $current_network->path . '</span><input name="blogname" type="text" id="blogname" placeholder="example: mysite" value="' . esc_attr( $blogname ) . '" maxlength="60" aria-describedby="blogname-ex" /><br />';
+		echo '<small id="blogname-ex" class="field-example">Example: mysite (letters and numbers only)</small>';
 	} else {
 		$site_domain = preg_replace( '|^www\.|', '', $current_network->domain );
-		echo '<input name="blogname" type="text" id="blogname" value="' . esc_attr( $blogname ) . '" maxlength="60" /><span class="suffix_address">.' . esc_html( $site_domain ) . '</span><br />';
+		echo '<input name="blogname" type="text" id="blogname" placeholder="example: mysite" value="' . esc_attr( $blogname ) . '" maxlength="60" aria-describedby="blogname-ex" /><span class="suffix_address">.' . esc_html( $site_domain ) . '</span><br />';
+		echo '<small id="blogname-ex" class="field-example">Example: mysite.' . esc_html( $site_domain ) . ' (letters and numbers only)</small>';
 	}
 
 	if ( ! is_user_logged_in() ) {
@@ -146,29 +176,30 @@ function show_blog_form( $blogname = '', $blog_title = '', $errors = '' ) {
 	$errmsg = $errors->get_error_message( 'blog_title' );
 	if ( $errmsg ) {
 		?>
-		<p class="error"><?php echo $errmsg; ?></p>
+		<p class="error"><?php echo esc_html( friendly_error_message( $errmsg ) ); ?></p>
 		<?php
 	}
-	echo '<input name="blog_title" type="text" id="blog_title" value="' . esc_attr( $blog_title ) . '" />';
+	echo '<input name="blog_title" type="text" id="blog_title" placeholder="Example: My Awesome Blog" value="' . esc_attr( $blog_title ) . '" />';
 	?>
 
 	<?php
 	// Site Language.
 	$languages = signup_get_available_languages();
 
+	// Language selector moved into Advanced options to simplify default form.
 	if ( ! empty( $languages ) ) :
 		?>
+		<p><a href="#" id="toggle-advanced">Show advanced options</a></p>
+		<div id="advanced-options" style="display:none;">
 		<p>
 			<label for="site-language"><?php _e( 'Site Language:' ); ?></label>
 			<?php
-			// Network default.
 			$lang = get_site_option( 'WPLANG' );
 
 			if ( isset( $_POST['WPLANG'] ) ) {
 				$lang = $_POST['WPLANG'];
 			}
 
-			// Use US English if the default isn't available.
 			if ( ! in_array( $lang, $languages ) ) {
 				$lang = '';
 			}
@@ -184,8 +215,9 @@ function show_blog_form( $blogname = '', $blog_title = '', $errors = '' ) {
 			);
 			?>
 		</p>
+		</div>
 		<?php
-		endif; // Languages.
+	endif; // Languages.
 
 		$blog_public_on_checked  = '';
 		$blog_public_off_checked = '';
@@ -253,13 +285,16 @@ function show_user_form( $user_name = '', $user_email = '', $errors = '' ) {
 		$errors = new WP_Error();
 	}
 
+	// Progress indicator for account step.
+	echo '<div class="signup-progress" style="margin-bottom:1em;font-weight:600;">Step 1 of 2 — Account</div>';
+
 	// Username.
 	echo '<label for="user_name">' . __( 'Username:' ) . '</label>';
 	$errmsg = $errors->get_error_message( 'user_name' );
 	if ( $errmsg ) {
-		echo '<p class="error">' . $errmsg . '</p>';
+		echo '<p class="error">' . esc_html( friendly_error_message( $errmsg ) ) . '</p>';
 	}
-	echo '<input name="user_name" type="text" id="user_name" value="' . esc_attr( $user_name ) . '" autocapitalize="none" autocorrect="off" maxlength="60" /><br />';
+	echo '<input name="user_name" type="text" id="user_name" placeholder="example: janedoe" value="' . esc_attr( $user_name ) . '" autocapitalize="none" autocorrect="off" maxlength="60" /><br />';
 	_e( '(Must be at least 4 characters, letters and numbers only.)' );
 	?>
 
@@ -268,9 +303,9 @@ function show_user_form( $user_name = '', $user_email = '', $errors = '' ) {
 	$errmsg = $errors->get_error_message( 'user_email' );
 	if ( $errmsg ) {
 		?>
-		<p class="error"><?php echo $errmsg; ?></p>
+	<p class="error"><?php echo esc_html( friendly_error_message( $errmsg ) ); ?></p>
 	<?php } ?>
-	<input name="user_email" type="email" id="user_email" value="<?php echo esc_attr( $user_email ); ?>" maxlength="200" /><br /><?php _e( 'We send your registration email to this address. (Double-check your email address before continuing.)' ); ?>
+	<input name="user_email" type="email" id="user_email" placeholder="you@example.com" value="<?php echo esc_attr( $user_email ); ?>" maxlength="200" /><br /><?php _e( 'We send your registration email to this address. (Double-check your email address before continuing.)' ); ?>
 	<?php
 	$errmsg = $errors->get_error_message( 'generic' );
 	if ( $errmsg ) {
@@ -1009,6 +1044,82 @@ if ( 'none' === $active_signup ) {
  */
 do_action( 'after_signup_form' );
 ?>
+
+<?php
+// Front-end enhancements: toggle advanced options and basic client-side validation for friendlier UX.
+?>
+<script type="text/javascript">
+/* <![CDATA[ */
+(function(){
+	function byId(id){return document.getElementById(id);}
+
+	var toggle = byId('toggle-advanced');
+	if(toggle){
+		toggle.addEventListener('click', function(e){
+			e.preventDefault();
+			var adv = byId('advanced-options');
+			if(!adv) return;
+			if(adv.style.display === 'none'){
+				adv.style.display = 'block';
+				toggle.textContent = 'Hide advanced options';
+			} else {
+				adv.style.display = 'none';
+				toggle.textContent = 'Show advanced options';
+			}
+		});
+	}
+
+	// Basic client-side validation to provide immediate, plain-language feedback.
+	var form = document.getElementById('setupform');
+	if(form){
+		form.addEventListener('submit', function(e){
+			var firstError = null;
+			var errors = [];
+			var userInput = byId('user_name');
+			var blogInput = byId('blogname');
+
+			// Clear previous inline messages.
+			var prev = document.querySelectorAll('.client-error');
+			Array.prototype.forEach.call(prev, function(n){ n.parentNode.removeChild(n); });
+
+			if(userInput){
+				var v = userInput.value.trim();
+				if(v.length > 0 && v.length < 4){
+					errors.push({field:userInput, msg:'Username must be at least 4 characters.'});
+				}
+				if(v && /[^A-Za-z0-9]/.test(v)){
+					errors.push({field:userInput, msg:'Username may only include letters and numbers.'});
+				}
+			}
+
+			if(blogInput){
+				var b = blogInput.value.trim();
+				if(b && /[^A-Za-z0-9\-]/.test(b)){
+					errors.push({field:blogInput, msg:'Site name may only contain letters, numbers, and hyphens.'});
+				}
+				if(b && b.length > 0 && b.length < 4){
+					errors.push({field:blogInput, msg:'Site name must be at least 4 characters.'});
+				}
+			}
+
+			if(errors.length){
+				e.preventDefault();
+				// show the first error near its field and focus it
+				var entry = errors[0];
+				var p = document.createElement('p');
+				p.className = 'client-error';
+				p.style.color = '#CC0000';
+				p.style.fontWeight = '600';
+				p.textContent = entry.msg;
+				entry.field.parentNode.insertBefore(p, entry.field.nextSibling);
+				entry.field.focus();
+				return false;
+			}
+		}, false);
+	}
+})();
+/* ]]> */
+</script>
 
 <?php
 get_footer( 'wp-signup' );
